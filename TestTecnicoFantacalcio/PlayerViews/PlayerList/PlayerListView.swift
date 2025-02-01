@@ -6,10 +6,12 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct PlayerListView: View {
     @ObservedObject var apiCall = APICall()
-    @State private var players: [PlayerInfo] = []
+    @Query var players: [PlayerInfo]
+    @State private var sortedPlayers: [PlayerInfo] = []
     @State private var apiError: Error? = nil
     @State private var isLoading = true
     @Environment(\.modelContext) var modelContext
@@ -26,9 +28,7 @@ struct PlayerListView: View {
                         if let apiError {
                             Text(apiError.localizedDescription)
                         } else {
-                            ForEach(players, id: \.id) { player in
-                                PlayerCell(player: player)
-                            }
+                            PlayersCells(players: sortedPlayers)
                         }
                     }
                 }
@@ -42,11 +42,7 @@ struct PlayerListView: View {
             }
             .task {
                 do {
-                    let fetchedPlayers = try await apiCall.fetchPlayers()
-                    populatePlayers(from: fetchedPlayers)
-                    
-                    await sorted()
-                    isLoading = false
+                    try await fetchAndSort()
                 } catch {
                     apiError = error
                 }
@@ -54,13 +50,23 @@ struct PlayerListView: View {
         }
     }
     
+    private func fetchAndSort() async throws {
+        let fetchedPlayers = try await apiCall.fetchPlayers()
+        populatePlayers(from: fetchedPlayers)
+        
+        await sorted()
+        isLoading = false
+    }
+    
     private func populatePlayers(from fetchedPlayers: [Player]) {
         if players.isEmpty {
             for player in fetchedPlayers {
                 let playerInfo = PlayerInfo(player: player)
-                players.append(playerInfo)
                 modelContext.insert(playerInfo)
             }
+             
+            // forziamo subito il save in modo tale da sortare subito dopo
+            try? modelContext.save()
         }
     }
     
@@ -68,16 +74,17 @@ struct PlayerListView: View {
         // se il team é lo stesso
         // sorta tra nomi
         // altrimenti sorta tra team
-        let sortedPlayers = players.sorted {
+        let sorted = players.sorted {
             if $0.player.teamAbbreviation == $1.player.teamAbbreviation {
                 return $0.player.playerName < $1.player.playerName
             } else {
                 return $0.player.teamAbbreviation < $1.player.teamAbbreviation
             }
         }
-
         
-        players = sortedPlayers
+        await MainActor.run {
+            sortedPlayers = sorted
+        }
     }
 }
 

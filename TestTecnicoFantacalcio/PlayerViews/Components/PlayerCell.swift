@@ -18,7 +18,7 @@ struct PlayerCell: View {
             PlayerImage(imageURL: player.player.imageURL)
             PlayerNameTeam(player: player.player)
             PlayerStats(player: player.player)
-            ToggleFavourite(toggle: $player.isFavourite)
+            ToggleFavourite(player: player)
         }
         .hAlign(.center)
         .padding(10)
@@ -58,17 +58,21 @@ fileprivate struct PlayerNameTeam: View {
 }
 
 fileprivate struct ToggleFavourite: View {
-    @Binding var toggle: Bool
+    @Bindable var player: PlayerInfo
     var body: some View {
         Button {
             withAnimation {
-                toggle.toggle()
+                player.isFavourite.toggle()
             }
         } label: {
             Image(systemName: toggle ? "star.fill" : "star")
                 .imageScale(.large)
                 .foregroundStyle(toggle ? .blue : .primary)
         }
+    }
+    
+    private var toggle: Bool {
+        return player.isFavourite
     }
 }
 
