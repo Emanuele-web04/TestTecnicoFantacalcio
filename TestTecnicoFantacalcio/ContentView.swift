@@ -14,7 +14,7 @@ struct ContentView: View {
                 .tabItem {
                     Label("Lista calciatori", systemImage: "person")
                 }
-            ProgressView()
+            FavouritesView()
                 .tabItem {
                     Label("Preferiti", systemImage: "star")
                 }

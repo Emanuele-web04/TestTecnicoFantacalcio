@@ -26,7 +26,7 @@ struct PlayerListView: View {
                         if let apiError {
                             Text(apiError.localizedDescription)
                         } else {
-                            ForEach(players, id: \.player.playerId) { player in
+                            ForEach(players, id: \.id) { player in
                                 PlayerCell(player: player)
                             }
                         }
@@ -43,17 +43,23 @@ struct PlayerListView: View {
             .task {
                 do {
                     let fetchedPlayers = try await apiCall.fetchPlayers()
-                        
-                    for player in fetchedPlayers {
-                        let playerInfo = PlayerInfo(player: player)
-                        players.append(playerInfo)
-                        modelContext.insert(playerInfo)
-                    }
+                    populatePlayers(from: fetchedPlayers)
+                    
                     await sorted()
                     isLoading = false
                 } catch {
                     apiError = error
                 }
+            }
+        }
+    }
+    
+    private func populatePlayers(from fetchedPlayers: [Player]) {
+        if players.isEmpty {
+            for player in fetchedPlayers {
+                let playerInfo = PlayerInfo(player: player)
+                players.append(playerInfo)
+                modelContext.insert(playerInfo)
             }
         }
     }

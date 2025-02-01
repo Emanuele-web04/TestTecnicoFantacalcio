@@ -8,9 +8,10 @@
 import SwiftUI
 
 struct LabelModifier: ViewModifier {
+    var color: Color
     func body(content: Content) -> some View {
         content
             .font(.subheadline)
-            .foregroundStyle(.secondary)
+            .foregroundStyle(color)
     }
 }

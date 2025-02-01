@@ -39,7 +39,7 @@ fileprivate struct PlayerStats: View {
             Text(String(format: "%.2f", player.averageGrade))
             Text(String(format: "%.2f", player.averageFantaGrade))
         }
-        .modifier(LabelModifier())
+        .modifier(LabelModifier(color: .secondary))
         .hAlign(.center)
     }
 }
@@ -51,7 +51,7 @@ fileprivate struct PlayerNameTeam: View {
             Text(player.playerName)
                 .font(.headline)
             Text(player.teamAbbreviation)
-                .modifier(LabelModifier())
+                .modifier(LabelModifier(color: .primary))
         }
         .hAlign(.leading)
     }
