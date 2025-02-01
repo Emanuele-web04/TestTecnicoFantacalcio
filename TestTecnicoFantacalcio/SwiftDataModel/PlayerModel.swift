@@ -11,9 +11,11 @@ import SwiftData
 @Model
 final class PlayerInfo {
     var player: Player
+    var isFavourite: Bool = false
     
-    init(player: Player) {
+    init(player: Player, isFavourite: Bool = false) {
         self.player = player
+        self.isFavourite = isFavourite
     }
 }
 

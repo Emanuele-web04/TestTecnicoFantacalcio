@@ -12,13 +12,13 @@ import SwiftUI
 import Kingfisher
 
 struct PlayerCell: View {
-    let player: Player
-
+    @Bindable var player: PlayerInfo
     var body: some View {
         HStack {
-            PlayerImage(imageURL: player.imageURL)
-            PlayerNameTeam(player: player)
-            PlayerStats(player: player)
+            PlayerImage(imageURL: player.player.imageURL)
+            PlayerNameTeam(player: player.player)
+            PlayerStats(player: player.player)
+            ToggleFavourite(toggle: $player.isFavourite)
         }
         .hAlign(.center)
         .padding(10)
@@ -40,6 +40,7 @@ fileprivate struct PlayerStats: View {
             Text(String(format: "%.2f", player.averageFantaGrade))
         }
         .modifier(LabelModifier())
+        .hAlign(.center)
     }
 }
 
@@ -60,9 +61,13 @@ fileprivate struct ToggleFavourite: View {
     @Binding var toggle: Bool
     var body: some View {
         Button {
-            toggle.toggle()
+            withAnimation {
+                toggle.toggle()
+            }
         } label: {
             Image(systemName: toggle ? "star.fill" : "star")
+                .imageScale(.large)
+                .foregroundStyle(toggle ? .blue : .primary)
         }
     }
 }
@@ -90,5 +95,5 @@ fileprivate struct PlayerImage: View {
 }
 
 #Preview {
-    PlayerCell(player: PlayerPlaceholder.placeholder)
+    PlayerCell(player: PlayerPlaceholder.sdPlaceholder)
 }

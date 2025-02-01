@@ -27,7 +27,7 @@ struct PlayerListView: View {
                             Text(apiError.localizedDescription)
                         } else {
                             ForEach(players, id: \.player.playerId) { player in
-                                PlayerCell(player: player.player)
+                                PlayerCell(player: player)
                             }
                         }
                     }

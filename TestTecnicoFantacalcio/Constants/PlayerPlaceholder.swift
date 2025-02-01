@@ -19,4 +19,8 @@ struct PlayerPlaceholder {
             gamesPlayed: 24
         )
     }
+    
+    static var sdPlaceholder: PlayerInfo {
+        PlayerInfo(player: placeholder)
+    }
 }
