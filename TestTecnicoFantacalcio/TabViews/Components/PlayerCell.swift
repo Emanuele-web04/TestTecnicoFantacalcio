@@ -87,7 +87,6 @@ fileprivate struct ToggleFavourite: View {
             }
         } label: {
             Image(systemName: toggle ? "star.fill" : "star")
-                .imageScale(.large)
                 .foregroundStyle(toggle ? .blue : .primary)
         }
     }

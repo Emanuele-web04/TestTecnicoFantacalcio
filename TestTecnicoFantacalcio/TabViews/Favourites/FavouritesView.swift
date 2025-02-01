@@ -11,6 +11,8 @@ import SwiftData
 struct FavouritesView: View {
     
     @Query var players: [PlayerInfo]
+    @State private var favourites: [PlayerInfo] = []
+    let vm = SharedViewModel()
     
     var body: some View {
         NavigationStack {
@@ -28,16 +30,23 @@ struct FavouritesView: View {
                 .vAlign(.top)
                 .hAlign(.center)
             }
-            
+            .onAppear {
+                // filter and sort
+                favouritesSort()
+            }
         }
     }
     
-    private var favourites: [PlayerInfo] {
+    
+    
+    private func favouritesSort() {
         let filtered = players.filter {
             $0.isFavourite
         }
         
-        return filtered
+        Task {
+            await vm.sort(filtered, in: $favourites)
+        }
     }
 }
 
