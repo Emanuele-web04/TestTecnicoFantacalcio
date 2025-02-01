@@ -13,12 +13,13 @@ import Kingfisher
 
 struct PlayerCell: View {
     @Bindable var player: PlayerInfo
+    var favouriteView = false
     var body: some View {
         HStack {
             PlayerImage(imageURL: player.player.imageURL)
             PlayerNameTeam(player: player.player)
-            PlayerStats(player: player.player)
-            ToggleFavourite(player: player)
+            stats
+            favourite
         }
         .hAlign(.center)
         .padding(10)
@@ -28,6 +29,26 @@ struct PlayerCell: View {
         }
         .safeAreaPadding(.horizontal)
         .safeAreaPadding(.vertical, 5)
+    }
+    
+    // creo una variabile che mi gestisce in che view mi trovo
+    // cosi da decidere cosa mostrare o meno senza creare molteplici view
+    // con gli stessi elementi
+    // se non si vuole adottare questo metodo possiamo togliere i fileprivate, rendere le struct pubbliche
+    // e creare 2 view diverse con questi elementi
+    @ViewBuilder
+    private var favourite: some View {
+        if !favouriteView {
+            ToggleFavourite(player: player)
+        }
+    }
+    
+    // stesso ragionamento per i playerstats
+    @ViewBuilder
+    private var stats: some View {
+        if favouriteView {
+            PlayerStats(player: player.player)
+        }
     }
 }
 
@@ -40,7 +61,7 @@ fileprivate struct PlayerStats: View {
             Text(String(format: "%.2f", player.averageFantaGrade))
         }
         .modifier(LabelModifier(color: .secondary))
-        .hAlign(.center)
+        // .hAlign(.center)
     }
 }
 

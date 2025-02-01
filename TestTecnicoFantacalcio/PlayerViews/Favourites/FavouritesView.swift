@@ -21,7 +21,8 @@ struct FavouritesView: View {
                             .hAlign(.center)
                             .frame(height: 150, alignment: .top)
                             .ignoresSafeArea()
-                        PlayersCells(players: favourites)
+                        StatsLabel()
+                        PlayersCells(players: favourites, favouriteView: true)
                     }
                 }
                 .vAlign(.top)
