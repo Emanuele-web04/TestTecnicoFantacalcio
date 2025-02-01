@@ -12,7 +12,7 @@ import SwiftData
 struct TestTecnicoFantacalcioApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            Item.self,
+            PlayersList.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 

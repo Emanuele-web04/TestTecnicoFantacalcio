@@ -9,10 +9,10 @@ import Foundation
 import SwiftData
 
 @Model
-final class Item {
-    var timestamp: Date
+final class PlayersList {
+    var players: [Player] = []
     
-    init(timestamp: Date) {
-        self.timestamp = timestamp
+    init(players: [Player] = []) {
+        self.players = players
     }
 }
