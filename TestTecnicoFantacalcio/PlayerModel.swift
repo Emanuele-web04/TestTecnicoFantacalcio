@@ -9,10 +9,11 @@ import Foundation
 import SwiftData
 
 @Model
-final class PlayersList {
-    var players: [Player] = []
+final class PlayerInfo {
+    var player: Player
     
-    init(players: [Player] = []) {
-        self.players = players
+    init(player: Player) {
+        self.player = player
     }
 }
+

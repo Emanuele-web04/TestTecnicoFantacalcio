@@ -9,9 +9,11 @@ import SwiftUI
 
 struct PlayerListView: View {
     @ObservedObject var apiCall = APICall()
-    @State private var players: [Player] = []
+    @State private var players: [PlayerInfo] = []
     @State private var apiError: Error? = nil
     @State private var isLoading = true
+    @Environment(\.modelContext) var modelContext
+    
     var body: some View {
         NavigationStack {
             VStack {
@@ -24,8 +26,8 @@ struct PlayerListView: View {
                         if let apiError {
                             Text(apiError.localizedDescription)
                         } else {
-                            ForEach(players, id: \.playerId) { player in
-                                PlayerCell(player: player)
+                            ForEach(players, id: \.player.playerId) { player in
+                                PlayerCell(player: player.player)
                             }
                         }
                     }
@@ -40,7 +42,13 @@ struct PlayerListView: View {
             }
             .task {
                 do {
-                    players = try await apiCall.fetchPlayers()
+                    let fetchedPlayers = try await apiCall.fetchPlayers()
+                        
+                    for player in fetchedPlayers {
+                        let playerInfo = PlayerInfo(player: player)
+                        players.append(playerInfo)
+                        modelContext.insert(playerInfo)
+                    }
                     await sorted()
                     isLoading = false
                 } catch {
@@ -55,10 +63,10 @@ struct PlayerListView: View {
         // sorta tra nomi
         // altrimenti sorta tra team
         let sortedPlayers = players.sorted {
-            if $0.teamAbbreviation == $1.teamAbbreviation {
-                return $0.playerName < $1.playerName
+            if $0.player.teamAbbreviation == $1.player.teamAbbreviation {
+                return $0.player.playerName < $1.player.playerName
             } else {
-                return $0.teamAbbreviation < $1.teamAbbreviation
+                return $0.player.teamAbbreviation < $1.player.teamAbbreviation
             }
         }
 

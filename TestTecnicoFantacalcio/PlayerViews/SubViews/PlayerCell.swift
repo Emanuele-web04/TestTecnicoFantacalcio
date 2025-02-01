@@ -39,8 +39,7 @@ fileprivate struct PlayerStats: View {
             Text(String(format: "%.2f", player.averageGrade))
             Text(String(format: "%.2f", player.averageFantaGrade))
         }
-        .textScale(.secondary)
-        .foregroundStyle(.secondary)
+        .modifier(LabelModifier())
     }
 }
 
@@ -51,20 +50,19 @@ fileprivate struct PlayerNameTeam: View {
             Text(player.playerName)
                 .font(.headline)
             Text(player.teamAbbreviation)
-                .textScale(.secondary)
-                .foregroundStyle(.secondary)
+                .modifier(LabelModifier())
         }
         .hAlign(.leading)
     }
 }
 
 fileprivate struct ToggleFavourite: View {
-    @Binding var player: Player
+    @Binding var toggle: Bool
     var body: some View {
         Button {
-            
+            toggle.toggle()
         } label: {
-            Image(systemName: "star")
+            Image(systemName: toggle ? "star.fill" : "star")
         }
     }
 }
