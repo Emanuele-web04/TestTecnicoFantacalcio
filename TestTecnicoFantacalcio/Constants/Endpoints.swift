@@ -9,5 +9,7 @@ import Foundation
 
 struct Endpoints {
     static let nullPlayerEndpoint = "https://content.fantacalcio.it/test/List-Default.png"
+    
+    // non usata poiché dal json non ci sono null, ma nel caso ci dovessero essere, questo é l endpoint
     static let nullFavEndpoint = "https://content.fantacalcio.it/test/Fav-Default.png"
 }

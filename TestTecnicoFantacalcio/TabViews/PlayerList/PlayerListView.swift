@@ -75,7 +75,7 @@ extension PlayerListView {
     private func updateSponsor() {
         guard let matchingSponsors = vm.matchingSponsors?.main else { return }
         
-        if i ==  (matchingSponsors.count - 1) {
+        if i == (matchingSponsors.count - 1) {
             plVM.sponsorToShow = vm.matchingSponsors?.main[i]
             i = 0
         } else {
