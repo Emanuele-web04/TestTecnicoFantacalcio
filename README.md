@@ -38,7 +38,7 @@ Ho usato `fileprivate struct` per non raggruppare troppo codice insieme e distin
 
 I `ViewModifiers` li ho creati per non riscrivere piú volte lo stesso codice style.
 
-## Dipendende Esterne
+## Dipendenze Esterne
 
 • Kingfisher
 
