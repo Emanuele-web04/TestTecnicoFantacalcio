@@ -14,16 +14,15 @@ struct FavouritesView: View {
     
     @ObservedObject var vm = SharedViewModel()
     @StateObject var favVM = FavViewModel()
-    let nullEndpoint = "https://content.fantacalcio.it/test/List-Default.png"
     @AppStorage("favCounter") var j = 0
-    let sectionId = "FAVOURITES"
+    
     var body: some View {
         NavigationStack {
             VStack {
                 ScrollView {
                     LazyVStack {
                         if let sponsorToShow = favVM.sponsorToShow {
-                            SponsorImage(sponsor: sponsorToShow, nullEndpoint: nullEndpoint)
+                            SponsorImage(sponsor: sponsorToShow, nullEndpoint: Endpoints.nullFavEndpoint)
                         }
                         StatsLabel()
                         PlayersCells(players: favVM.favourites, favouriteView: true)
@@ -37,7 +36,7 @@ struct FavouritesView: View {
                 // filter and sort
                 favouritesSort()
                 Task {
-                    await vm.assignMatchingSponsors(sponsors, with: sectionId) {
+                    await vm.assignMatchingSponsors(sponsors, with: SectionsID.sectionFavId) {
                         updateSponsor()
                     }
                 }
@@ -49,7 +48,9 @@ struct FavouritesView: View {
 // MARK: - FUNZIONI E VARIABILI
 extension FavouritesView {
     private func updateSponsor() {
-        if j == 2 {
+        guard let matchingSponsors = vm.matchingSponsors?.main else { return }
+        
+        if j == (matchingSponsors.count - 1) {
             favVM.sponsorToShow = vm.matchingSponsors?.main[j]
             j = 0
         } else {

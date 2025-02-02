@@ -18,19 +18,17 @@ struct PlayerListView: View {
     
     @FocusState var isFocused
     
-    let nullEndpoint = "https://content.fantacalcio.it/test/List-Default.png"
     @AppStorage("counter") var i = 0
     @ObservedObject var vm = SharedViewModel()
     @StateObject var plVM = PLViewModel()
     
-    let sectionId = "PLAYERS_LIST"
     var body: some View {
         NavigationStack {
             VStack {
                 ScrollView {
                     LazyVStack {
                         if let sponsorToShow = plVM.sponsorToShow {
-                            SponsorImage(sponsor: sponsorToShow, nullEndpoint: nullEndpoint)
+                            SponsorImage(sponsor: sponsorToShow, nullEndpoint: Endpoints.nullPlayerEndpoint)
                         }
                         
                         // ho creato una custom searchbar anche sapendo dell'esistenza di .searchable
@@ -75,7 +73,9 @@ struct PlayerListView: View {
 // MARK: - FUNZIONI E VARIABILI
 extension PlayerListView {
     private func updateSponsor() {
-        if i == 2 {
+        guard let matchingSponsors = vm.matchingSponsors?.main else { return }
+        
+        if i ==  (matchingSponsors.count - 1) {
             plVM.sponsorToShow = vm.matchingSponsors?.main[i]
             i = 0
         } else {
@@ -134,7 +134,7 @@ extension PlayerListView {
             try? modelContext.save()
         }
         
-        await vm.assignMatchingSponsors(sponsors, with: sectionId) {
+        await vm.assignMatchingSponsors(sponsors, with: SectionsID.sectionPlayedId) {
             updateSponsor()
         }
     }
