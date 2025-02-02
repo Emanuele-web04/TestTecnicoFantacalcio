@@ -7,7 +7,20 @@
 
 import SwiftUI
 
-class SharedViewModel {
+class SharedViewModel: ObservableObject {
+    let apiSponsorCall = APISponsorCall()
+    @Published var matchingSponsors: Sponsor? = nil
+    @Published var sponsorToShow: MainObject? = nil
+    
+    func assignMatchingSponsors(_ sponsors: [SponsorModel],
+                              with sectionId: String,
+                              updateSponsor: @escaping () -> Void) async {
+        await MainActor.run {
+            matchingSponsors = sponsors.first(where: { $0.sponsor.sectionId == sectionId })?.sponsor
+            updateSponsor()
+        }
+    }
+    
     func sort(_ players: [PlayerInfo], in sortedPlayers: Binding<[PlayerInfo]>) async {
         // se il team é lo stesso
         // sorta tra nomi

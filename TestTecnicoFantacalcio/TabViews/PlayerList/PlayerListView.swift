@@ -19,24 +19,22 @@ struct PlayerListView: View {
     @State private var isLoading = true
     @Environment(\.modelContext) var modelContext
     @State private var search = ""
+    @State private var searched = false
     @FocusState var isFocused
     
-    let apiSponsorCall = APISponsorCall()
-    @State private var matchingSponsors: Sponsor? = nil
-    @State private var sponsorToShow: MainObject? = nil
-    let nullEndpoint = "https://content.fantacalcio.it/test/Fav-Default.png"
+    let nullEndpoint = "https://content.fantacalcio.it/test/List-Default.png"
     @AppStorage("counter") var i = 0
-    let vm = SharedViewModel()
+    @ObservedObject var vm = SharedViewModel()
+    
+    let sectionId = "PLAYERS_LIST"
     var body: some View {
         NavigationStack {
             VStack {
                 ScrollView {
                     LazyVStack {
-                       
-                                if let sponsorToShow {
-                                    Main(main: sponsorToShow)
-                                }
-                          
+                        if let sponsorToShow = vm.sponsorToShow {
+                            SponsorImage(sponsor: sponsorToShow, nullEndpoint: nullEndpoint)
+                        }
                         
                         // ho creato una custom searchbar anche sapendo dell'esistenza di .searchable
                         // perché la searchbar tende ad andare sopra tutto il contenuto
@@ -48,6 +46,11 @@ struct PlayerListView: View {
                             // filtra i calciatori in base al nome
                             searchName()
                         }
+                        .onChange(of: search, {
+                            if search.isEmpty {
+                                searched = false
+                            }
+                        })
                         .padding()
                         mainBlock
                     }
@@ -74,44 +77,12 @@ struct PlayerListView: View {
     
     private func updateSponsor() {
         if i == 2 {
-            sponsorToShow = matchingSponsors?.main[i]
+            vm.sponsorToShow = vm.matchingSponsors?.main[i]
             i = 0
         } else {
-            sponsorToShow = matchingSponsors?.main[i]
+            vm.sponsorToShow = vm.matchingSponsors?.main[i]
             i += 1
         }
-    }
-    
-    @ViewBuilder
-    private func Main(main: MainObject) -> some View {
-        
-            if let tapUrl = main.tapUrl, let url = URL(string: tapUrl) {
-                Button {
-                    // se non si vuole usare UIApplication
-                    // si puo anche usare NavigationLink con destination e label
-                    UIApplication.shared.open(url)
-                } label: {
-                    if let validURL = URL(string: main.image) {
-                        KFImage(validURL)
-                            .placeholder {
-                                ProgressView()
-                            }
-                            .resizable()
-                            .hAlign(.center)
-                            
-                    }
-                }
-            } else {
-                if let url = URL(string: nullEndpoint) {
-                    KFImage(url)
-                        .placeholder {
-                            ProgressView()
-                        }
-                        .resizable()
-                        .hAlign(.center)
-                }
-            }
-        
     }
     
     @ViewBuilder
@@ -119,10 +90,14 @@ struct PlayerListView: View {
         if let apiError {
             Text(apiError.localizedDescription)
         } else {
-            PlayersCells(players: totalPlayers)
+            if searched && results.isEmpty {
+                ContentUnavailableView("No results for \(search)", systemImage: "magnifyingglass")
+            } else {
+                PlayersCells(players: totalPlayers)
+            }
         }
     }
-    
+
     private func fetchAndSort() async throws {
         let fetchedPlayers = try await apiPlayerCall.fetchPlayers()
         populatePlayers(from: fetchedPlayers)
@@ -148,8 +123,9 @@ struct PlayerListView: View {
         }
     }
     
+    // mettere in comune
     private func fetchSponsors() async throws {
-        let fetchedSponsors = try await apiSponsorCall.fetchSponsors()
+        let fetchedSponsors = try await vm.apiSponsorCall.fetchSponsors()
         if sponsors.isEmpty {
             for sponsor in fetchedSponsors {
                 let sponsorModel = SponsorModel(sponsor: sponsor)
@@ -159,8 +135,7 @@ struct PlayerListView: View {
             try? modelContext.save()
         }
         
-        await MainActor.run {
-            matchingSponsors = sponsors.first(where: { $0.sponsor.sectionId == "PLAYERS_LIST" })?.sponsor
+        await vm.assignMatchingSponsors(sponsors, with: sectionId) {
             updateSponsor()
         }
     }
@@ -205,7 +180,7 @@ struct PlayerListView: View {
             
             return compactPlayerName.contains(compactSearch)
         }
-        
+        searched = true
         results = searchResult
     }
 }
