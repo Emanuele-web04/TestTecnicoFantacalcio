@@ -12,7 +12,7 @@
 L'App usa **SwiftUI** come framework UI, e **Swiftdata** come framework per **persistere** dati localmente.
 
 Utilizza **AppStorage** per salvare l'indice degli sponsor da mostrare, in modo tale che il ciclo riprenda dall'ultimo sponsor visto.
-Questo si puó notare nelle View principali nelle funzioni **"updateSponsor()"**.
+Questo si puó notare nelle View principali nelle funzioni `updateSponsor()`.
 
 ## Architettura
 
@@ -30,12 +30,12 @@ La struttura dell'app é suddivisa in **molteplici cartelle** e **files** per di
 
 Ho creato una cartella API con "custom" **enum APIError** in comune e le varie chiamate per i giocatori e sponsor.
 
-Ho deciso di utilizzare per la maggior parte **.hAlign()** e **.vAlign()** per non abusare di "Spacer()".
+Ho deciso di utilizzare per la maggior parte `.hAlign()` e `.vAlign()` per non abusare di "Spacer()".
 
-Ho usato gli **static let** nella **struct Endpoints** per avere tutto sotto controllo e in maniera piú ordinata e chiara possibile.
-Ho usato **fileprivate struct** per non raggruppare troppo codice insieme e distinguere il tutto.
+Ho usato gli `static let` nella `struct Endpoints` per avere tutto sotto controllo e in maniera piú ordinata e chiara possibile.
+Ho usato `fileprivate struct` per non raggruppare troppo codice insieme e distinguere il tutto.
 
-I **ViewModifiers** li ho creati per non riscrivere piú volte lo stesso codice style.
+I `ViewModifiers` li ho creati per non riscrivere piú volte lo stesso codice style.
 
 ## Dipendende Esterne
 
