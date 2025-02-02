@@ -10,6 +10,7 @@
 
 
 L'App usa **SwiftUI** come framework UI, e **Swiftdata** come framework per **persistere** dati localmente.
+
 Utilizza **AppStorage** per salvare l'indice degli sponsor da mostrare, in modo tale che il ciclo riprenda dall'ultimo sponsor visto.
 Questo si puó notare nelle View principali nelle funzioni **"updateSponsor()"**.
 
