@@ -16,7 +16,9 @@ class SharedViewModel: ObservableObject {
                               with sectionId: String,
                               updateSponsor: @escaping () -> Void) async {
         await MainActor.run {
-            matchingSponsors = sponsors.first(where: { $0.sponsor.sectionId == sectionId })?.sponsor
+            guard let sponsorModel = sponsors.first(where: { $0.sectionId == sectionId }) else { return }
+            let sponsors = Sponsor(main: sponsorModel.sponsor, sectionId: sponsorModel.sectionId, description: sponsorModel.sponsorDesc)
+            matchingSponsors = sponsors
             updateSponsor()
         }
     }

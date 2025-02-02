@@ -10,9 +10,15 @@ import SwiftData
 
 @Model
 final class SponsorModel {
-    var sponsor: Sponsor
+    // se vedete nella cronologia dei commit ho cambiato il modello
+    // perchè la parola description era riservata e quindi ho dovuto smantellare il modello e prenderlo pezzo pezzo
+    var sponsor: [MainObject]
+    var sectionId: String
+    var sponsorDesc: String
     
     init(sponsor: Sponsor) {
-        self.sponsor = sponsor
+        self.sponsor = sponsor.main
+        self.sectionId = sponsor.sectionId
+        self.sponsorDesc = sponsor.description
     }
 }
