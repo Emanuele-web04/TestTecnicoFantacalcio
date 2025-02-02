@@ -26,6 +26,7 @@ Questo si puó notare nelle View principali nelle funzioni `updateSponsor()`.
 
 
 Ho utilizzato il design pattern: **MVVM** (Model View ViewModel).
+
 La struttura dell'app é suddivisa in **molteplici cartelle** e **files** per distinguere e rendere il tutto piú chiaro.
 
 Ho creato una cartella API con "custom" **enum APIError** in comune e le varie chiamate per i giocatori e sponsor.
