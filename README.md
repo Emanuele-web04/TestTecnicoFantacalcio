@@ -25,11 +25,17 @@ Questo si puó notare nelle View principali nelle funzioni "updateSponsor()".
 
 
 Ho utilizzato il design pattern: MVVM (Model View ViewModel).
+
 La struttura dell'app é suddivisa in molteplici cartelle e files per distinguere e rendere il tutto piú chiaro.
+
 Ho deciso di utilizzare per la maggior parte .hAlign() e .vAlign() per non abusare di "Spacer()".
+
 Ho usato gli static let nella Struct Endpoints per avere tutto sotto controllo e in maniera piú ordinata e chiara possibile.
+
 Ho creato una cartella API con "custom" enum APIError in comune e le varie chiamate per i giocatori e sponsor.
+
 I ViewModifiers li ho creati per non riscrivere piú volte lo stesso codice style.
+
 Ho usato fileprivate struct per non raggruppare troppo codice insieme e distinguere il tutto.
 
 ## Dipendende Esterne
