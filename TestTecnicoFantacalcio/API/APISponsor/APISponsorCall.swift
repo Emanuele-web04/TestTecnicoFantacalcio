@@ -1,5 +1,5 @@
 //
-//  APICall.swift
+//  APISponsorCall.swift
 //  TestTecnicoFantacalcio
 //
 //  Created by Emanuele Di Pietro on 01/02/25.
@@ -7,11 +7,11 @@
 
 import Foundation
 
-class APICall: ObservableObject {
+class APISponsorCall {
     // endpoint = location da dove la chiamata prende i dati
-    let endpoint = "https://content.fantacalcio.it/test/test.json"
+    let endpoint = "https://content.fantacalcio.it/test/sponsor.json"
     
-    func fetchPlayers() async throws -> [Player] {
+    func fetchSponsors() async throws -> [Sponsor] {
         // verifichiamo che l'url sia valido
         guard let url = URL(string: endpoint) else {
             throw APIError.invalidUrl
@@ -20,17 +20,15 @@ class APICall: ObservableObject {
         do {
             let (data, response) = try await URLSession.shared.data(from: url)
             
-            // check se la risposta é di 200, se é di 200 vuol dire che non ci sono stati errori di server o connessione
-            // se non é 200 lancia un errore che verrá poi mostrato all'utente
+            // stessa logica
             guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
                 throw APIError.invalidResponse
             }
             
-            // decodifichiamo da JSON a Players
             let decoder = JSONDecoder()
-            let players = try decoder.decode([Player].self, from: data)
+            let sponsors = try decoder.decode([Sponsor].self, from: data)
             
-            return players
+            return sponsors
         } catch {
             throw APIError.invalidData
         }

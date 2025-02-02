@@ -13,8 +13,9 @@ struct TestTecnicoFantacalcioApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             PlayerInfo.self,
+            SponsorModel.self,
         ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+        let modelConfiguration = ModelConfiguration(schema: schema)
 
         do {
             return try ModelContainer(for: schema, configurations: [modelConfiguration])

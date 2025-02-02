@@ -9,13 +9,11 @@ import Foundation
 import SwiftData
 
 @Model
-final class PlayerInfo: Identifiable {
-    var id: String = UUID().uuidString
+final class PlayerInfo {
     var player: Player
     var isFavourite: Bool = false
     
-    init(id: String = UUID().uuidString, player: Player, isFavourite: Bool = false) {
-        self.id = id
+    init(player: Player, isFavourite: Bool = false) {
         self.player = player
         self.isFavourite = isFavourite
     }
