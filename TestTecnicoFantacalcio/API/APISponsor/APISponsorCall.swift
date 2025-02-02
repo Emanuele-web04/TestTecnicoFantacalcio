@@ -8,12 +8,9 @@
 import Foundation
 
 class APISponsorCall {
-    // endpoint = location da dove la chiamata prende i dati
-    let endpoint = "https://content.fantacalcio.it/test/sponsor.json"
-    
     func fetchSponsors() async throws -> [Sponsor] {
         // verifichiamo che l'url sia valido
-        guard let url = URL(string: endpoint) else {
+        guard let url = URL(string: Endpoints.sponsorEndpoint) else {
             throw APIError.invalidUrl
         }
         

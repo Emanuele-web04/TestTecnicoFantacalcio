@@ -9,11 +9,10 @@ import Foundation
 
 class APIPlayerCall {
     // endpoint = location da dove la chiamata prende i dati
-    let endpoint = "https://content.fantacalcio.it/test/test.json"
     
     func fetchPlayers() async throws -> [Player] {
         // verifichiamo che l'url sia valido
-        guard let url = URL(string: endpoint) else {
+        guard let url = URL(string: Endpoints.playerEndpoint) else {
             throw APIError.invalidUrl
         }
         
