@@ -23,23 +23,20 @@ struct PlayerListView: View {
     
     let apiSponsorCall = APISponsorCall()
     @State private var matchingSponsors: Sponsor? = nil
+    @State private var sponsorToShow: MainObject? = nil
     let nullEndpoint = "https://content.fantacalcio.it/test/Fav-Default.png"
-    
+    @AppStorage("counter") var i = 0
     let vm = SharedViewModel()
     var body: some View {
         NavigationStack {
             VStack {
                 ScrollView {
                     LazyVStack {
-                        ScrollView {
-                            LazyVStack {
-                                if let matchingSponsors {
-                                    ForEach(matchingSponsors.main, id: \.image) { sponsor in
-                                        Main(main: sponsor)
-                                    }
+                       
+                                if let sponsorToShow {
+                                    Main(main: sponsorToShow)
                                 }
-                            }
-                        }
+                          
                         
                         // ho creato una custom searchbar anche sapendo dell'esistenza di .searchable
                         // perché la searchbar tende ad andare sopra tutto il contenuto
@@ -55,6 +52,7 @@ struct PlayerListView: View {
                         mainBlock
                     }
                 }
+                .ignoresSafeArea()
                 .vAlign(.top)
                 .hAlign(.center)
             }
@@ -74,6 +72,16 @@ struct PlayerListView: View {
         }
     }
     
+    private func updateSponsor() {
+        if i == 2 {
+            sponsorToShow = matchingSponsors?.main[i]
+            i = 0
+        } else {
+            sponsorToShow = matchingSponsors?.main[i]
+            i += 1
+        }
+    }
+    
     @ViewBuilder
     private func Main(main: MainObject) -> some View {
         
@@ -85,11 +93,22 @@ struct PlayerListView: View {
                 } label: {
                     if let validURL = URL(string: main.image) {
                         KFImage(validURL)
+                            .placeholder {
+                                ProgressView()
+                            }
+                            .resizable()
+                            .hAlign(.center)
+                            
                     }
                 }
             } else {
                 if let url = URL(string: nullEndpoint) {
                     KFImage(url)
+                        .placeholder {
+                            ProgressView()
+                        }
+                        .resizable()
+                        .hAlign(.center)
                 }
             }
         
@@ -142,6 +161,7 @@ struct PlayerListView: View {
         
         await MainActor.run {
             matchingSponsors = sponsors.first(where: { $0.sponsor.sectionId == "PLAYERS_LIST" })?.sponsor
+            updateSponsor()
         }
     }
     

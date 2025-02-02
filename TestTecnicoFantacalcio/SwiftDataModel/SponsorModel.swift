@@ -11,12 +11,9 @@ import SwiftData
 @Model
 final class SponsorModel {
     var sponsor: Sponsor
-    var lastPlayerSponsor: Sponsor? = nil
-    var lastFavouriteSponsor: Sponsor? = nil
     
-    init(sponsor: Sponsor, lastPlayerSponsor: Sponsor? = nil, lastFavouriteSponsor: Sponsor? = nil) {
+
+    init(sponsor: Sponsor) {
         self.sponsor = sponsor
-        self.lastPlayerSponsor = lastPlayerSponsor
-        self.lastFavouriteSponsor = lastFavouriteSponsor
     }
 }
