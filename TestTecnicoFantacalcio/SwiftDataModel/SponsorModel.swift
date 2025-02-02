@@ -12,7 +12,6 @@ import SwiftData
 final class SponsorModel {
     var sponsor: Sponsor
     
-
     init(sponsor: Sponsor) {
         self.sponsor = sponsor
     }

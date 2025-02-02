@@ -9,8 +9,8 @@ import SwiftUI
 
 class SharedViewModel: ObservableObject {
     let apiSponsorCall = APISponsorCall()
+    
     @Published var matchingSponsors: Sponsor? = nil
-    @Published var sponsorToShow: MainObject? = nil
     
     func assignMatchingSponsors(_ sponsors: [SponsorModel],
                               with sectionId: String,

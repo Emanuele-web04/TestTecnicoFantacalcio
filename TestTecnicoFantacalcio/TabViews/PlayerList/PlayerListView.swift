@@ -10,21 +10,18 @@ import SwiftData
 import Kingfisher
 
 struct PlayerListView: View {
-    let apiPlayerCall = APIPlayerCall()
     @Query var players: [PlayerInfo]
     @Query var sponsors: [SponsorModel]
-    @State private var sortedPlayers: [PlayerInfo] = []
-    @State private var results: [PlayerInfo] = []
-    @State private var apiError: Error? = nil
+    
     @State private var isLoading = true
     @Environment(\.modelContext) var modelContext
-    @State private var search = ""
-    @State private var searched = false
+    
     @FocusState var isFocused
     
     let nullEndpoint = "https://content.fantacalcio.it/test/List-Default.png"
     @AppStorage("counter") var i = 0
     @ObservedObject var vm = SharedViewModel()
+    @StateObject var plVM = PLViewModel()
     
     let sectionId = "PLAYERS_LIST"
     var body: some View {
@@ -32,7 +29,7 @@ struct PlayerListView: View {
             VStack {
                 ScrollView {
                     LazyVStack {
-                        if let sponsorToShow = vm.sponsorToShow {
+                        if let sponsorToShow = plVM.sponsorToShow {
                             SponsorImage(sponsor: sponsorToShow, nullEndpoint: nullEndpoint)
                         }
                         
@@ -40,19 +37,18 @@ struct PlayerListView: View {
                         // perché la searchbar tende ad andare sopra tutto il contenuto
                         SearchBar(
                             isFocused: _isFocused,
-                            search: $search,
+                            search: $plVM.search,
                             prompt: "Cerca giocatori..."
                         ) {
                             // filtra i calciatori in base al nome
-                            searchName()
+                            plVM.searchName()
                         }
-                        .onChange(of: search, {
-                            if search.isEmpty {
-                                searched = false
-                            }
+                        .onChange(of: plVM.search, {
+                            plVM.onChangeofSearch()
                         })
                         .padding()
-                        mainBlock
+                        
+                        allPlayers
                     }
                 }
                 .ignoresSafeArea()
@@ -69,29 +65,32 @@ struct PlayerListView: View {
                     try await fetchAndSort()
                     try await fetchSponsors()
                 } catch {
-                    apiError = error
+                    plVM.apiError = error
                 }
             }
         }
     }
-    
+}
+
+// MARK: - FUNZIONI E VARIABILI
+extension PlayerListView {
     private func updateSponsor() {
         if i == 2 {
-            vm.sponsorToShow = vm.matchingSponsors?.main[i]
+            plVM.sponsorToShow = vm.matchingSponsors?.main[i]
             i = 0
         } else {
-            vm.sponsorToShow = vm.matchingSponsors?.main[i]
+            plVM.sponsorToShow = vm.matchingSponsors?.main[i]
             i += 1
         }
     }
     
     @ViewBuilder
-    private var mainBlock: some View {
-        if let apiError {
+    private var allPlayers: some View {
+        if let apiError = plVM.apiError {
             Text(apiError.localizedDescription)
         } else {
-            if searched && results.isEmpty {
-                ContentUnavailableView("No results for \(search)", systemImage: "magnifyingglass")
+            if plVM.searched && plVM.results.isEmpty {
+                ContentUnavailableView("No results for \(plVM.search)", systemImage: "magnifyingglass")
             } else {
                 PlayersCells(players: totalPlayers)
             }
@@ -99,9 +98,9 @@ struct PlayerListView: View {
     }
 
     private func fetchAndSort() async throws {
-        let fetchedPlayers = try await apiPlayerCall.fetchPlayers()
+        let fetchedPlayers = try await plVM.apiPlayerCall.fetchPlayers()
         populatePlayers(from: fetchedPlayers)
-        await vm.sort(players, in: $sortedPlayers)
+        await vm.sort(players, in: $plVM.sortedPlayers)
         isLoading = false
     }
     
@@ -140,48 +139,12 @@ struct PlayerListView: View {
         }
     }
     
-    private func sorted() async {
-        // se il team é lo stesso
-        // sorta tra nomi
-        // altrimenti sorta tra team
-        let sorted = players.sorted {
-            if $0.player.teamAbbreviation == $1.player.teamAbbreviation {
-                return $0.player.playerName < $1.player.playerName
-            } else {
-                return $0.player.teamAbbreviation < $1.player.teamAbbreviation
-            }
-        }
-        
-        await MainActor.run {
-            sortedPlayers = sorted
-        }
-    }
-    
     private var searching: Bool {
-        return !search.isEmpty && !isFocused
+        return !plVM.search.isEmpty && !isFocused
     }
     
     private var totalPlayers: [PlayerInfo] {
-        return searching ? results : sortedPlayers
-    }
-    
-    private func searchName() {
-        // cosi se l utente sbaglia a digitare o mette uno spazio esce comunque il risultato
-        let compactSearch = search
-            .components(separatedBy: .whitespacesAndNewlines)
-            .joined()
-            .lowercased()
-        
-        let searchResult = sortedPlayers.filter {
-            let compactPlayerName = $0.player.playerName
-                .components(separatedBy: .whitespacesAndNewlines)
-                .joined()
-                .lowercased()
-            
-            return compactPlayerName.contains(compactSearch)
-        }
-        searched = true
-        results = searchResult
+        return searching ? plVM.results : plVM.sortedPlayers
     }
 }
 

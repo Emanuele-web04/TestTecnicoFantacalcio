@@ -51,7 +51,8 @@ import Foundation
 struct Sponsor: Codable {
    let main: [MainObject]
    let sectionId: String
-// devo modificare il nome "description" perché in swiftdata mi da errore che é una parola riservata
+    
+// devo modificare il nome "description" perché in swiftdata mi da errore poiche é una parola riservata
 //   let sponsorDescription: String
 //   
 //   enum CodingKeys: String, CodingKey {
