@@ -3,8 +3,11 @@
 ## Dettagli Tecnici dell'App
 
 • SwiftUI
+
 • SwiftData 
+
 • AppStorage
+
 
 L'App usa SwiftUI come framework UI, e Swiftdata come framework per persistere dati localmente.
 Utilizza AppStorage per salvare l'indice degli sponsor da mostrare, in modo tale che il ciclo riprenda dall'ultimo sponsor visto.
@@ -13,9 +16,13 @@ Questo si puó notare nelle View principali nelle funzioni "updateSponsor()".
 ## Architettura
 
 • MVVM
+
 • Suddivisione del codice in cartelle
+
 • Estensioni & Helpers
+
 • ViewModifiers
+
 
 Ho utilizzato il design pattern: MVVM (Model View ViewModel).
 La struttura dell'app é suddivisa in molteplici cartelle e files per distinguere e rendere il tutto piú chiaro.
