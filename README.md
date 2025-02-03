@@ -42,9 +42,11 @@ I `ViewModifiers` li ho creati per non riscrivere piú volte lo stesso codice st
 
 • Kingfisher
 
-Ho utilizzato **Kingfisher**, che secondo la mia opinione é piú ottimale della built-in function AsyncImage
-Nel codice si vedrá anche un articolo che ho condiviso che spiega la differenza tra i due
-[Kingfisher License](https://github.com/onevcat/Kingfisher/blob/master/LICENSE)
+Ho utilizzato **Kingfisher**, che secondo la mia opinione é piú ottimale della built-in function AsyncImage.
+
+Nel codice si vedrá anche un articolo che ho condiviso che spiega la differenza tra i due.
+
+License: [Kingfisher License](https://github.com/onevcat/Kingfisher/blob/master/LICENSE)
 
 ## Leggere e vedere i commenti nel codice per capire e comprendere al meglio tutto il processo.
 
