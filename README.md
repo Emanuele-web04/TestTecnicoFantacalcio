@@ -31,7 +31,7 @@ La struttura dell'app é suddivisa in **molteplici cartelle** e **files** per di
 
 Ho creato una cartella API con "custom" `enum APIError` in comune e le varie chiamate per i giocatori e sponsor.
 
-Ho deciso di utilizzare per la maggior parte `.hAlign()` e `.vAlign()` per non abusare di "Spacer()".
+Ho deciso di utilizzare per la maggior parte `.hAlign()` e `.vAlign()` per non abusare di `Spacer()`.
 
 Ho usato gli `static let` nella `struct Endpoints` per avere tutto sotto controllo e in maniera piú ordinata e chiara possibile.
 Ho usato `fileprivate struct` per non raggruppare troppo codice insieme e distinguere il tutto.
