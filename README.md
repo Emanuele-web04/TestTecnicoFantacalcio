@@ -29,7 +29,7 @@ Ho utilizzato il design pattern: **MVVM** (Model View ViewModel).
 
 La struttura dell'app é suddivisa in **molteplici cartelle** e **files** per distinguere e rendere il tutto piú chiaro.
 
-Ho creato una cartella API con "custom" **enum APIError** in comune e le varie chiamate per i giocatori e sponsor.
+Ho creato una cartella API con "custom" `enum APIError` in comune e le varie chiamate per i giocatori e sponsor.
 
 Ho deciso di utilizzare per la maggior parte `.hAlign()` e `.vAlign()` per non abusare di "Spacer()".
 
